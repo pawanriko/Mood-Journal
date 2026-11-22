@@ -33,7 +33,7 @@ export function EntryCard({ entry }: { entry: Entry }) {
   });
 
   return (
-    <article className="card card-hover p-4">
+    <article className="card liquid-card card-hover p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <MoodLabel mood={entry.mood} />

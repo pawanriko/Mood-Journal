@@ -21,7 +21,9 @@ export function MoodPicker({
             aria-checked={selected}
             aria-label={m.label}
             onClick={() => onChange(m.value)}
-            className="flex flex-col items-center gap-2 rounded-lg border px-2 py-3 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] active:scale-[0.98]"
+            className={`flex flex-col items-center gap-2 rounded-lg border px-2 py-3 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] hover:-translate-y-0.5 active:scale-[0.96] ${
+              selected ? 'mood-pop' : ''
+            }`}
             style={{
               background: selected ? 'var(--accent)' : 'var(--surface)',
               color: selected ? 'var(--on-accent)' : 'var(--text)',

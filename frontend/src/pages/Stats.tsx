@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 import type { Stats } from '../lib/types';
@@ -17,7 +18,7 @@ function StatTile({
   delay: string;
 }) {
   return (
-    <div className="card anim-stagger p-4" style={{ animationDelay: delay }}>
+    <div className="card liquid-card anim-stagger p-4" style={{ animationDelay: delay }}>
       <p className="caption-1" style={{ color: 'var(--muted)' }}>{label}</p>
       <p className="heading-4 mt-2">{value}</p>
       <p className="caption-2 mt-1" style={{ color: 'var(--muted)' }}>{hint}</p>
@@ -26,6 +27,11 @@ function StatTile({
 }
 
 export function StatsPage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setMounted(true), 80);
+    return () => window.clearTimeout(t);
+  }, []);
   const statsQuery = useQuery({
     queryKey: ['stats'],
     queryFn: () => api.get<Stats>('/stats/'),
@@ -98,7 +104,7 @@ export function StatsPage() {
             />
           </section>
 
-          <section className="card p-4 sm:p-6" aria-label="Mood distribution">
+          <section className="card liquid-card p-4 sm:p-6" aria-label="Mood distribution">
             <h2 className="heading-6 mb-2">Mood distribution</h2>
             <p className="caption-1 mb-6" style={{ color: 'var(--muted)' }}>
               How often each mood shows up across all your entries.
@@ -120,8 +126,8 @@ export function StatsPage() {
                       aria-label={`${m.label}: ${count} entries, ${pct} percent`}
                     >
                       <div
-                        className="h-full rounded-lg transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                        style={{ width: `${pct}%`, background: 'var(--accent)' }}
+                        className="bar-grow h-full rounded-lg"
+                        style={{ width: mounted ? `${pct}%` : '0%', background: 'var(--accent)', ['--d' as string]: `${m.value * 80}ms` }}
                       />
                     </div>
                     <span className="body-4 w-16 shrink-0 text-right">

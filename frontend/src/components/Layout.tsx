@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   CalendarBlank,
   ChartBar,
   ClockCounterClockwise,
   House,
   List,
-  Moon,
+  Plus,
   SignOut,
   Smiley,
-  Sun,
   X,
 } from '@phosphor-icons/react';
 import { useAuth } from '../lib/auth';
@@ -26,6 +25,7 @@ export function Layout() {
   const { user, logout } = useAuth();
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -35,8 +35,22 @@ export function Layout() {
     navigate('/login', { replace: true });
   }
 
+  function handleFab() {
+    const scrollToEntry = () => {
+      document.getElementById('today-entry')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    if (location.pathname !== '/') {
+      navigate('/');
+      window.setTimeout(scrollToEntry, 350);
+    } else {
+      scrollToEntry();
+    }
+  }
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      <div className="app-blob app-blob-1" aria-hidden="true" />
+      <div className="app-blob app-blob-2" aria-hidden="true" />
       <a href="#main" className="skip-link">
         Skip to content
       </a>
@@ -81,16 +95,12 @@ export function Layout() {
             ) : null}
             <button
               type="button"
-              onClick={toggle}
+              onClick={(e) => toggle(e.clientX, e.clientY)}
               aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] active:scale-[0.98]"
-              style={{
-                background: 'var(--surface)',
-                borderColor: 'var(--border)',
-                color: 'var(--text)',
-              }}
+              title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              className="ink-toggle"
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              <span className="ink-toggle-dot" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -145,9 +155,49 @@ export function Layout() {
         ) : null}
       </header>
 
-      <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:py-8">
+      <main id="main" className="relative z-10 mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-28 sm:py-8 md:pb-8">
         <Outlet />
       </main>
+
+      {/* Floating + : jumps to today's entry, like the planner screens. */}
+      <button
+        type="button"
+        onClick={handleFab}
+        aria-label="Log today's mood"
+        className="btn btn-primary fixed bottom-20 right-4 z-40 h-14 w-14 !rounded-full !p-0 shadow-lg md:bottom-6 md:right-6"
+      >
+        <Plus size={24} weight="bold" aria-hidden="true" />
+      </button>
+
+      {/* Mobile bottom nav, like the planner screens. */}
+      <nav
+        aria-label="Mobile navigation"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t md:hidden"
+        style={{
+          background: 'var(--surface)',
+          backdropFilter: 'blur(18px) saturate(1.4)',
+          WebkitBackdropFilter: 'blur(18px) saturate(1.4)',
+          borderColor: 'var(--border)',
+        }}
+      >
+        <div className="mx-auto grid max-w-5xl grid-cols-4">
+          {NAV.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) =>
+                `flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium ${
+                  isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'
+                }`
+              }
+            >
+              <Icon size={20} aria-hidden="true" />
+              {label}
+            </NavLink>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

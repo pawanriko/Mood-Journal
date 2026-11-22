@@ -1,6 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { X } from '@phosphor-icons/react';
+
+/** Scroll reveal: fades + rises in when the element enters the
+ *  viewport. Falls back to visible immediately if the observer
+ *  is unavailable or motion is reduced. */
+export function Reveal({
+  children,
+  delay = '0ms',
+  className = '',
+}: {
+  children: ReactNode;
+  delay?: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.12 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`reveal ${visible ? 'reveal-visible' : ''} ${className}`} style={{ ['--d' as string]: delay }}>
+      {children}
+    </div>
+  );
+}
 
 export function Spinner({ label }: { label?: string }) {
   return (

@@ -19,9 +19,9 @@
 /* text (skill B5).                                                    */
 /* ------------------------------------------------------------------ */
 :root {
-  --bg: #ffffff;
-  --surface: rgba(255, 255, 255, 0.72);
-  --surface-2: #f5f5f5;
+  --bg: #faf8f3;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-2: #f3efe8;
   --border: #e5e5e5;
   --text: #0a0a0a;
   --muted: #737373;
@@ -40,7 +40,7 @@
 }
 
 .dark {
-  --bg: #000000;
+  --bg: #050505;
   --surface: rgba(255, 255, 255, 0.07);
   --surface-2: rgba(255, 255, 255, 0.1);
   --border: rgba(255, 255, 255, 0.14);
@@ -511,5 +511,297 @@ body {
   }
   .topbar-nav-link {
     transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Ink-splash theme transition (from the codemure reel, Nov 2026).    */
+/* A black / warm-white ink blob with droplets grows out of the       */
+/* toggle, covers the screen, the theme swaps underneath, then the    */
+/* ink retreats. No fade, no slide — an organic splatter edge.       */
+/* ------------------------------------------------------------------ */
+.ink-overlay {
+  position: fixed;
+  z-index: 300;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.ink-blob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 170vmax;
+  height: 170vmax;
+  transform: translate(-50%, -50%) scale(0) rotate(0deg);
+  background: var(--ink-bg, #000);
+  /* Irregular, blobby edge — never a clean circle. */
+  border-radius: 58% 42% 55% 45% / 48% 55% 42% 58%;
+  filter: url(#ink-rough);
+  animation: ink-expand 620ms cubic-bezier(0.65, 0, 0.25, 1) forwards;
+  will-change: transform;
+}
+.ink-blob-out {
+  animation: ink-retreat 620ms cubic-bezier(0.65, 0, 0.25, 1) forwards;
+}
+.ink-speck {
+  position: absolute;
+  border-radius: 9999px;
+  background: var(--bg);
+  opacity: 0.9;
+}
+.ink-speck-1 {
+  width: 3vmax;
+  height: 3vmax;
+  left: 18%;
+  top: 22%;
+}
+.ink-speck-2 {
+  width: 1.6vmax;
+  height: 1.6vmax;
+  left: 68%;
+  top: 30%;
+}
+.ink-speck-3 {
+  width: 2.2vmax;
+  height: 2.2vmax;
+  left: 55%;
+  top: 68%;
+}
+.ink-drop {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 58% 42% 55% 45% / 48% 55% 42% 58%;
+  background: var(--ink-bg, #000);
+  animation: ink-drop-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.ink-drop-out {
+  animation: ink-drop-out 500ms ease-in forwards;
+}
+@keyframes ink-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-14deg);
+  }
+  55% {
+    transform: translate(-50%, -50%) scale(0.62) rotate(6deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(10deg);
+  }
+}
+@keyframes ink-retreat {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0) rotate(-18deg);
+  }
+}
+@keyframes ink-drop-in {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes ink-drop-out {
+  to {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Ink toggle: thin outline circle, solid dot that flips with theme — */
+/* the toggle tile from the reel.                                     */
+.ink-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--accent);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out),
+    background-color 300ms var(--ease-out);
+}
+.ink-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-sm);
+}
+.ink-toggle:active {
+  transform: scale(0.92);
+}
+.ink-toggle-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  transition:
+    transform 500ms var(--ease-out),
+    background-color 300ms var(--ease-out);
+}
+.ink-toggle:hover .ink-toggle-dot {
+  transform: scale(1.25);
+}
+
+/* ------------------------------------------------------------------ */
+/* Liquid glass + motion. Frosted cards with a slow sheen sweep on    */
+/* hover, soft floating background blobs, scroll-reveal, and a pop    */
+/* for the selected mood. Monochrome only — black / white, warm      */
+/* cream in light mode, near-black in dark mode.                      */
+/* ------------------------------------------------------------------ */
+.app-blob {
+  position: fixed;
+  z-index: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+.app-blob-1 {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  right: -80px;
+  background: rgba(0, 0, 0, 0.07);
+  animation: blob-drift 18s ease-in-out infinite alternate;
+}
+.app-blob-2 {
+  width: 360px;
+  height: 360px;
+  bottom: -140px;
+  left: -100px;
+  background: rgba(0, 0, 0, 0.05);
+  animation: blob-drift 22s ease-in-out infinite alternate-reverse;
+}
+.dark .app-blob-1 {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark .app-blob-2 {
+  background: rgba(255, 255, 255, 0.05);
+}
+@keyframes blob-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-30px, 24px) scale(1.08);
+  }
+}
+
+.liquid-card {
+  position: relative;
+  overflow: hidden;
+}
+.liquid-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 48%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  transition: transform 900ms var(--ease-out);
+}
+.dark .liquid-card::after {
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.09) 48%,
+    transparent 62%
+  );
+}
+.liquid-card:hover::after {
+  transform: translateX(120%);
+}
+
+/* Scroll reveal: hidden until it enters the viewport, then rises in. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes mood-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.mood-pop {
+  animation: mood-pop 450ms var(--ease-out);
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.bar-grow {
+  transform-origin: left;
+  animation: bar-grow 800ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes week-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.week-pop {
+  animation: week-pop 500ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-overlay,
+  .ink-blob,
+  .ink-drop {
+    display: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .app-blob-1,
+  .app-blob-2 {
+    animation: none;
+  }
+  .liquid-card::after {
+    display: none;
   }
 }

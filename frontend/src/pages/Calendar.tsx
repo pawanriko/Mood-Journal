@@ -67,7 +67,7 @@ export function CalendarPage() {
         </p>
       </section>
 
-      <section className="card p-4 sm:p-6" aria-label={`Calendar for ${monthName}`}>
+      <section className="card liquid-card p-4 sm:p-6" aria-label={`Calendar for ${monthName}`}>
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 className="heading-6">{monthName}</h2>
           <div className="flex gap-2">

@@ -4,7 +4,7 @@ import { fetchAll } from '../lib/api';
 import type { Entry } from '../lib/types';
 import { monthString } from '../lib/moods';
 import { EntryCard } from '../components/EntryCard';
-import { EmptyState, ErrorBanner, Skeleton } from '../components/ui';
+import { EmptyState, ErrorBanner, Reveal, Skeleton } from '../components/ui';
 
 export function HistoryPage() {
   const [month, setMonth] = useState(monthString(new Date()));
@@ -69,8 +69,10 @@ export function HistoryPage() {
           <p className="caption-1" style={{ color: 'var(--muted)' }}>
             {entries.length} {entries.length === 1 ? 'entry' : 'entries'} in {monthName}
           </p>
-          {entries.map((entry) => (
-            <EntryCard key={entry.id} entry={entry} />
+          {entries.map((entry, i) => (
+            <Reveal key={entry.id} delay={`${Math.min(i, 5) * 60}ms`}>
+              <EntryCard entry={entry} />
+            </Reveal>
           ))}
         </section>
       )}
