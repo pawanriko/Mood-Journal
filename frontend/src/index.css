@@ -1,0 +1,515 @@
+@import "tailwindcss";
+@import "@fontsource-variable/manrope";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* Design tokens: BLACK AND WHITE ONLY. Light mode = pure white base, */
+/* dark mode = pure black base. No green, gold, amber, purple or blue */
+/* anywhere. The only accent is black in light mode and white in dark */
+/* mode. Mood is shown with monochrome cues only: filled vs outline,  */
+/* solid vs hollow, plus the mood label. Surfaces are glassy:         */
+/* translucent + backdrop blur + a soft gloss highlight. Backgrounds  */
+/* are flat (skill B4); the only gradient allowed is on hero heading  */
+/* text (skill B5).                                                    */
+/* ------------------------------------------------------------------ */
+:root {
+  --bg: #ffffff;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-2: #f5f5f5;
+  --border: #e5e5e5;
+  --text: #0a0a0a;
+  --muted: #737373;
+  --accent: #000000;
+  --accent-2: #262626;
+  --accent-soft: #f0f0f0;
+  --on-accent: #ffffff;
+  --danger: #0a0a0a;
+  --danger-soft: #f0f0f0;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --cursor-glow: rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.1);
+  --gloss: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #000000;
+  --surface: rgba(255, 255, 255, 0.07);
+  --surface-2: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.14);
+  --text: #fafafa;
+  --muted: #a3a3a3;
+  --accent: #ffffff;
+  --accent-2: #e5e5e5;
+  --accent-soft: rgba(255, 255, 255, 0.1);
+  --on-accent: #000000;
+  --danger: #fafafa;
+  --danger-soft: rgba(255, 255, 255, 0.12);
+  --cursor-glow: rgba(255, 255, 255, 0.11);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.55);
+  --gloss: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------------ */
+/* Named text styles (skill B1). Every text element resolves to one   */
+/* of these; sizes land on Tailwind scale steps, weights cap at bold,  */
+/* no italics, headings use text-wrap: balance, body uses pretty.     */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .heading-1 {
+    @apply text-6xl font-semibold leading-none;
+    text-wrap: balance;
+  }
+  .heading-2 {
+    @apply text-5xl font-semibold leading-none;
+    text-wrap: balance;
+  }
+  .heading-3 {
+    @apply text-4xl font-semibold leading-10;
+    text-wrap: balance;
+  }
+  .heading-4 {
+    @apply text-3xl font-semibold leading-9;
+    text-wrap: balance;
+  }
+  .heading-5 {
+    @apply text-2xl font-semibold leading-8;
+    text-wrap: balance;
+  }
+  .heading-6 {
+    @apply text-xl font-semibold leading-7;
+    text-wrap: balance;
+  }
+  .title-1 {
+    @apply text-xl font-medium leading-7;
+    text-wrap: balance;
+  }
+  .title-2 {
+    @apply text-lg font-medium leading-7;
+    text-wrap: balance;
+  }
+  .title-3 {
+    @apply text-base font-medium leading-6;
+    text-wrap: balance;
+  }
+  .title-4 {
+    @apply text-sm font-medium leading-5;
+    text-wrap: balance;
+  }
+  .title-5 {
+    @apply text-xs font-medium leading-4;
+    text-wrap: balance;
+  }
+  .body-1 {
+    @apply text-base font-semibold leading-6;
+    text-wrap: pretty;
+  }
+  .body-2 {
+    @apply text-base font-medium leading-6;
+    text-wrap: pretty;
+  }
+  .body-3 {
+    @apply text-base leading-6;
+    text-wrap: pretty;
+  }
+  .body-4 {
+    @apply text-sm font-semibold leading-5;
+    text-wrap: pretty;
+  }
+  .body-5 {
+    @apply text-sm font-medium leading-5;
+    text-wrap: pretty;
+  }
+  .body-6 {
+    @apply text-sm leading-5;
+    text-wrap: pretty;
+  }
+  .button-lg {
+    @apply text-lg font-semibold leading-7;
+  }
+  .button-md {
+    @apply text-base font-semibold leading-6;
+  }
+  .button-sm {
+    @apply text-sm font-semibold leading-5;
+  }
+  .button-xsm {
+    @apply text-xs font-semibold leading-4;
+  }
+  .caption-1 {
+    @apply text-sm font-medium leading-5;
+  }
+  .caption-2 {
+    @apply text-sm leading-5;
+  }
+  .caption-3 {
+    @apply text-xs font-semibold leading-4;
+  }
+  .caption-4 {
+    @apply text-xs font-medium leading-4;
+  }
+  .caption-5 {
+    @apply text-xs leading-4;
+  }
+
+  /* Hero heading text gradient (skill B5 — the one place gradients   */
+  /* are used, on text only, never on a background).                  */
+  .hero-text {
+    background: linear-gradient(90deg, #000000, #666666);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .dark .hero-text {
+    background: linear-gradient(90deg, #ffffff, #9b9b9b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Design system: one button, card, input and badge style, reused     */
+/* everywhere. Spacing comes from the skill B2 table only; radii from  */
+/* B3 (card rounded-3xl, inner shapes rounded-lg per the nested       */
+/* radius formula: 24px outer minus 16px gap = 8px inner). Buttons:   */
+/* 8px vertical / 12px horizontal padding (B2).                        */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
+      select-none cursor-pointer
+      disabled:opacity-50 disabled:pointer-events-none
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)];
+    transition:
+      background-color 300ms var(--ease-out),
+      color 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out),
+      transform 500ms var(--ease-out),
+      filter 300ms var(--ease-out);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 2px 10px rgba(0, 0, 0, 0.22);
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    filter: brightness(1.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.26);
+    transform: translate(-1px, -1px);
+  }
+  .btn-ghost {
+    background: color-mix(in srgb, var(--surface) 55%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    backdrop-filter: blur(12px) saturate(1.3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .btn-ghost:hover {
+    background: var(--surface-2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: translate(-1px, -1px);
+  }
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1.5px solid var(--danger);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .btn-danger:hover {
+    background: var(--danger);
+    color: var(--on-accent);
+    filter: none;
+  }
+  .btn-sm {
+    @apply px-2 py-1 text-xs;
+  }
+
+  /* Glass panel: translucent surface + backdrop blur + a soft gloss  */
+  /* highlight along the top edge.                                     */
+  .card {
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    box-shadow: var(--gloss), var(--shadow-sm);
+  }
+
+  .card-hover {
+    transition:
+      transform 500ms var(--ease-out),
+      box-shadow 500ms var(--ease-out);
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .input {
+    @apply w-full rounded-lg border px-3 py-2 text-sm outline-none
+      focus:ring-2 focus:border-[var(--accent)];
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text);
+    --tw-ring-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    transition:
+      border-color 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out);
+  }
+  .input::placeholder {
+    color: var(--muted);
+  }
+  select.input {
+    appearance: auto;
+  }
+
+  .label {
+    @apply block text-xs font-medium mb-1;
+    color: var(--muted);
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+  .badge-grey {
+    background: var(--surface-2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .badge-solid {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .topbar-wordmark {
+    font-family: var(--font-sans);
+    font-size: clamp(1.35rem, 1rem + 1.2vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .topbar-nav {
+    scrollbar-width: none;
+  }
+  .topbar-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .topbar-nav-link {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+    gap: 0.375rem;
+    transition:
+      transform 300ms var(--ease-out),
+      background-color 300ms var(--ease-out),
+      color 300ms var(--ease-out);
+  }
+  .topbar-nav-link:hover,
+  .topbar-nav-link:focus-visible {
+    transform: scale(1.06);
+  }
+  .topbar-nav-link.active {
+    box-shadow: inset 0 -3px 0 var(--accent);
+  }
+
+  .nav-link {
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium;
+    color: var(--muted);
+    transition:
+      background-color 300ms var(--ease-out),
+      color 300ms var(--ease-out);
+  }
+  .nav-link:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .nav-link.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  /* Skip link for keyboard users (skill B10). Visually hidden until  */
+  /* focused, then a solid button at the top of the page.              */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: 0.5rem;
+    z-index: 100;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transform: translateY(-300%);
+    transition: transform 500ms var(--ease-out);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Animations (skill B7): one base curve, duration-500 for layout /   */
+/* position changes, 300ms for colour and opacity, never under 200ms. */
+/* Only transform and opacity are animated. Reduced motion replaces    */
+/* movement with a plain opacity change.                               */
+/* ------------------------------------------------------------------ */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-page {
+  animation: page-in 500ms var(--ease-out) both;
+}
+.anim-stagger {
+  animation: stagger-in 500ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+.anim-modal {
+  animation: modal-in 500ms var(--ease-out) both;
+}
+.anim-overlay {
+  animation: overlay-in 300ms var(--ease-out) both;
+}
+
+.cursor-glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 150;
+  width: 340px;
+  height: 340px;
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, var(--cursor-glow) 0%, transparent 65%);
+  transition: opacity 300ms ease;
+  will-change: transform;
+}
+
+/* Sibling blur on hover: inside a .blur-siblings group, hovering one  */
+/* child blurs the rest slightly while the hovered one stays sharp.    */
+/* Only on devices with a real hover pointer, never under reduced       */
+/* motion.                                                             */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .blur-siblings > * {
+    transition:
+      filter 200ms var(--ease-out),
+      opacity 200ms var(--ease-out);
+  }
+  .blur-siblings:hover > :not(:hover) {
+    filter: blur(1.5px);
+    opacity: 0.7;
+  }
+  .blur-siblings:not(:hover) > * {
+    transition-duration: 60ms;
+  }
+  .lift-on-hover > * {
+    transition:
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
+  }
+  .lift-on-hover > *:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-page,
+  .anim-modal,
+  .anim-overlay,
+  .anim-stagger {
+    animation: none;
+  }
+  .cursor-glow {
+    display: none;
+  }
+  .topbar-nav-link {
+    transition: none;
+  }
+}

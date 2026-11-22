@@ -1,0 +1,34 @@
+# Render blueprint for the Mood Journal.
+# One Free web service serves Django + the built React SPA from a single
+# domain; the database is a Neon Free Postgres project (created separately
+# in the Neon dashboard — its pooled URL goes into DATABASE_URL below).
+# Same pattern as the Personal Finance Dashboard (Render Free + Neon Free,
+# $0/month). Docs: README.md "Production build".
+services:
+  - type: web
+    name: mood-journal
+    env: python
+    plan: free
+    buildCommand: >-
+      pip install -r requirements.txt
+      && npm ci --prefix frontend
+      && npm run build --prefix frontend
+      && python manage.py collectstatic --noinput
+      && python manage.py migrate
+    startCommand: gunicorn moodjournal.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: DJANGO_DEBUG
+        value: "false"
+      # Render generates a fresh secret on first deploy; never commit one.
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      # Fill in after creating the Neon project (pooled URL, ?sslmode=require).
+      - key: DATABASE_URL
+        sync: false
+      # Fill in after the first deploy, once the .onrender.com URL exists.
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
